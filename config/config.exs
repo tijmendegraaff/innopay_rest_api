@@ -23,7 +23,7 @@ config :logger, :console,
   metadata: [:user_id]
 
 # Guardian config
-config :myApi, InnopayRestApi.Guardian,
+config :innopay_rest_api, InnopayRestApi.Guardian,
   issuer: "InnopayRestApi",
   secret_key: "xs1QqqUvhrDdSfqUc6wVuzimFaJq0DBPkp/Ri/qFOU0/A7lavUv8Xp/48STTTJFv"
 # Import environment specific config. This must remain at the bottom
