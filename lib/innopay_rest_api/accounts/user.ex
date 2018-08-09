@@ -9,6 +9,7 @@ defmodule InnopayRestApi.Accounts.User do
     field :name, :string
     field :pin_hash, :string
     field :role, :string
+    field :email, :string
     # Virtual fields
     field :pin, :string, virtual: true
     field :pin_confirmation, :string, virtual: true
@@ -19,10 +20,12 @@ defmodule InnopayRestApi.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :role, :pin, :pin_confirmation])
-    |> validate_required([:name, :role, :pin, :pin_confirmation])
+    |> cast(attrs, [:name, :email, :role, :pin, :pin_confirmation])
+    |> validate_required([:name, :email, :role, :pin, :pin_confirmation])
+    |> validate_format(:email, ~r/@/)
     |> validate_length(:pin, min: 5)
     |> validate_confirmation(:pin)
+    |> unique_constraint(:email)
     |> put_pin_hash
   end
 

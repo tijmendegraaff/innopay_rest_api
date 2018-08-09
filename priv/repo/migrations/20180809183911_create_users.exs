@@ -4,11 +4,12 @@ defmodule InnopayRestApi.Repo.Migrations.CreateUsers do
   def change do
     create table(:users) do
       add :name, :string
+      add :email, :string
       add :role, :string
       add :pin_hash, :string
 
       timestamps()
     end
-
+    create unique_index(:users, [:email])
   end
 end
