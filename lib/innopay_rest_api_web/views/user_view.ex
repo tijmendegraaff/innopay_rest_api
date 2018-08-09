@@ -13,7 +13,12 @@ defmodule InnopayRestApiWeb.UserView do
   def render("user.json", %{user: user}) do
     %{id: user.id,
       name: user.name,
+      email: user.email,
       role: user.role,
       pin_hash: user.pin_hash}
+  end
+
+  def render("jwt.json", %{jwt: jwt}) do
+    %{jwt: jwt}
   end
 end
