@@ -5,7 +5,9 @@ defmodule InnopayRestApiWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", InnopayRestApiWeb do
+  scope "/api/v1", InnopayRestApiWeb do
     pipe_through :api
+
+    resources "/users", UserController, only: [:create, :show]
   end
 end
