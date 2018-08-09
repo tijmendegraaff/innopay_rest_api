@@ -4,6 +4,8 @@ defmodule InnopayRestApi.Accounts do
   """
 
   import Ecto.Query, warn: false
+  import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
+  alias InnopayRestApi.Guardian
   alias InnopayRestApi.Repo
 
   alias InnopayRestApi.Accounts.User
@@ -100,5 +102,37 @@ defmodule InnopayRestApi.Accounts do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  def token_sign_in(email, pin) do
+    case email_pin_auth(email, pin) do
+      {:ok, user} ->
+        Guardian.encode_and_sign(user)
+      _ ->
+        {:error, :unauthorized}
+    end
+  end
+
+  defp email_pin_auth(email, pin) when is_binary(email) and is_binary(pin) do
+    with {:ok, user} <- get_by_email(email),
+    do: verify_pin(pin, user)
+  end
+
+  defp get_by_email(email) when is_binary(email) do
+    case Repo.get_by(User, email: email) do
+      nil ->
+        dummy_checkpw()
+        {:error, "Login error."}
+      user ->
+        {:ok, user}
+    end
+  end
+
+  defp verify_pin(pin, %User{} = user) when is_binary(pin) do
+    if checkpw(pin, user.pin_hash) do
+      {:ok, user}
+    else
+      {:error, :invalid_password}
+    end
   end
 end
